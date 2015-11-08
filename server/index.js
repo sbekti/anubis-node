@@ -25,10 +25,13 @@ function processMessage(topic, message) {
 }
 
 function openMQTTConnection() {
-  const client = mqtt.connect(config.ANUBIS_MQTT_SERVER);
+  const client = mqtt.connect(config.ANUBIS_MQTT_SERVER, {
+    username: config.ANUBIS_MQTT_USERNAME,
+    password: config.ANUBIS_MQTT_PASSWORD
+  });
 
   client.on('connect', () => {
-    client.subscribe(config.ANUBIS_NODE_TOPIC);
+    client.subscribe(config.ANUBIS_MQTT_TOPIC);
   });
 
   client.on('message', (topic, message) => {
