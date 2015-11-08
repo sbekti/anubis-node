@@ -1,23 +1,24 @@
 import mqtt from 'mqtt';
-import gpio from 'pi-gpio';
+import gpio from 'rpi-gpio';
 import config from '../config';
 
 function processMessage(topic, message) {
   if (topic == config.ANUBIS_NODE_TOPIC) {
     try {
+      console.log('Got a message from topic: ' + topic);
+      console.log(message);
+
       const payload = JSON.parse(message);
-      const state = payload.state;
+      const state = payload.state == 1 ? true : false;
 
-      if ((state == 0) || (state == 1)) {
-        gpio.write(config.ANUBIS_GPIO_PIN, state, (err) => {
-          if (err) {
-            console.error('Failed to set GPIO');
-            return;
-          }
+      gpio.write(config.ANUBIS_GPIO_PIN, state, function(err) {
+        if (err) {
+          console.error('Failed to set GPIO');
+          return;
+        }
 
-          console.log('GPIO set to: ' + state);
-        });
-      }
+        console.log('GPIO set to: ' + state);
+      });
     } catch (err) {
       console.error(err);
     }
@@ -32,6 +33,7 @@ function openMQTTConnection() {
 
   client.on('connect', () => {
     client.subscribe(config.ANUBIS_MQTT_TOPIC);
+    console.log('Connected to server');
   });
 
   client.on('message', (topic, message) => {
@@ -40,7 +42,7 @@ function openMQTTConnection() {
 }
 
 function openGPIO() {
-  gpio.open(config.ANUBIS_GPIO_PIN, 'output', (err) => {
+  gpio.setup(config.ANUBIS_GPIO_PIN, gpio.DIR_OUT, (err) => {
     if (err) {
       console.error(err);
       return;

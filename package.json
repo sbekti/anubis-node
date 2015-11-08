@@ -12,6 +12,6 @@
     "babel-core": "^6.1.2",
     "babel-preset-es2015": "^6.1.2",
     "mqtt": "^1.5.0",
-    "pi-gpio": "0.0.8"
+    "rpi-gpio": "^0.7.0"
   }
 }
