@@ -3,11 +3,8 @@ import gpio from 'rpi-gpio';
 import config from '../config';
 
 function processMessage(topic, message) {
-  if (topic == config.ANUBIS_NODE_TOPIC) {
+  if (topic == config.ANUBIS_MQTT_TOPIC) {
     try {
-      console.log('Got a message from topic: ' + topic);
-      console.log(message);
-
       const payload = JSON.parse(message);
       const state = payload.state == 1 ? true : false;
 
@@ -37,6 +34,9 @@ function openMQTTConnection() {
   });
 
   client.on('message', (topic, message) => {
+    console.log('Got a message from topic: ' + topic.toString());
+    console.log(message.toString());
+    
     processMessage(topic.toString(), message.toString());
   });
 }
