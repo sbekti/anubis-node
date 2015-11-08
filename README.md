@@ -1,7 +1,7 @@
 # anubis-node
 Anubis client node implementation
 
-### Environment Variables
+## Environment Variables
 
 | Variables | Description |
 | --------- | ----------- |
